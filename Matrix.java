@@ -1,3 +1,5 @@
+package com.test.test;
+
 /**
  * Matrix
  * This class allows you to create a two-dimensional Matrix of integers.
@@ -134,6 +136,100 @@ class Matrix {
 		for (int i = 0; i < this.height; i++) {
 			for (int j = 0; j < this.width; j++) {
 				n.matrix[j][i] = matrix[this.height - i - 1][j];
+			}
+		}
+		
+		return n;
+	}
+	
+	/**
+	 * multipleMatrix
+	 * This will multiply two Matrices together.  This will only work if they are matrices that can be multiplied together.
+	 * @param m - Matrix that you want to multiply with.
+	 * @return Matrix - this will return a new Matrix as a result.
+	 * Ex.
+	 * 1,2,3   1,2,3    30,36,42,
+	 * 4,5,6 * 4,5,6 -> 66,81,96, 
+	 * 7,8,9   7,8,9    102,126,150
+	 */
+	public Matrix multiplyMatrix(Matrix m) {
+		Matrix n = new Matrix(this.toString(), this.width, this.height);
+		// They are Square matrices - WORKS
+		if (m.height == m.width && this.height == this.width && this.height == m.height){
+			for (int i = 0; i < this.height; i++) {
+				for (int j = 0; j < this.width; j++) {
+					n.matrix[i][j] = matrix[i][0] * m.matrix[0][j];
+					for (int x = (this.width-1); x > 0; x--) {
+						n.matrix[i][j] += matrix[i][x] * m.matrix[x][j];
+					}
+				}
+			}
+		}
+		// 1x3 * 3x1 - WORKS
+		else if (this.height == 1 && this.width != 1) {
+			n = new Matrix(1, m.width, 100);
+			for (int i = 0; i < m.width; i++) {
+				for (int j = 0; j < this.height; j++) {
+					n.matrix[0][i] = matrix[0][j] * m.matrix[0][i];
+					for (int x = (m.height - 1); x > 0; x--) {
+						n.matrix[0][i] += matrix[0][x] * m.matrix[x][i];
+					}
+				}
+			}
+		}
+		// 3x1 * 1x3. Where 3 is the height.
+		else if (m.height != 1 && m.width == 1) {
+			n = new Matrix(m.height, 1, 100);
+			for (int i = 0; i < this.height; i++) {
+				for (int j = 0; j < 1; j++) {
+					n.matrix[i][j] = matrix[i][0] * m.matrix[0][0];
+						for (int x = (this.height - 1); x > 0; x--) {
+						n.matrix[i][j] += matrix[i][x] * m.matrix[x][0];
+					}
+				}
+			}
+		}
+		// For odd matrices.  Like multiplying a 3x2 * 2x2. Where 3 is the height.
+		else if (m.height == this.width) {
+			for (int i = 0; i < this.height; i++) {
+				for (int j = 0; j < m.width; j++) {
+					n.matrix[i][j] = matrix[i][0] * m.matrix[0][j];
+					if (m.height > 1) {
+						for (int x = (m.height - 1); x > 0; x--) {
+							n.matrix[i][j] += matrix[i][x] * m.matrix[x][j];
+						}
+					}
+				}
+			}
+		}
+		else {
+			try {
+				throw new Exception("Cannot multiply these Matrices together.");
+			} catch (Exception e) {
+				System.out.println(e.getLocalizedMessage());
+			}
+			
+		}
+		
+		return n;
+	}
+	
+	/**
+	 * Multiply
+	 * This will multiply a given matrix by a given number and return a new matrix as the result.
+	 * @param num - The number to multiply the matrix by.
+	 * @return Matrix - this Matrix will be the matrix provided multipled by the num.
+	 * Ex. multiply(2)
+	 * 1,2,3    1,4,6
+	 * 4,5,6 -> 8,10,12
+	 * 7,8,9    14,16,18
+	 */
+	public Matrix multiply(int num) {
+		Matrix n = new Matrix(this.toString(), this.width, this.height);
+		
+		for (int i = 0; i < this.height; i++) {
+			for (int j = 0; j < this.width; j++) {
+				n.matrix[i][j] = (matrix[i][j] * num);
 			}
 		}
 		
